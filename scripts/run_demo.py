@@ -35,6 +35,9 @@ if __name__=="__main__":
   parser.add_argument('--denoise_radius', type=float, default=0.03, help='radius to use for outlier removal')
   args = parser.parse_args()
 
+
+
+
   set_logging_format()
   set_seed(0)
   torch.autograd.set_grad_enabled(False)
@@ -62,6 +65,10 @@ if __name__=="__main__":
   code_dir = os.path.dirname(os.path.realpath(__file__))
   img0 = imageio.imread(args.left_file)
   img1 = imageio.imread(args.right_file)
+    ##---------------#
+  t1 = time.time()
+
+  
   scale = args.scale
   assert scale<=1, "scale must be <=1"
   img0 = cv2.resize(img0, fx=scale, fy=scale, dsize=None)
@@ -108,6 +115,8 @@ if __name__=="__main__":
     pcd = pcd.select_by_index(keep_ids)
     o3d.io.write_point_cloud(f'{args.out_dir}/cloud.ply', pcd)
     logging.info(f"PCL saved to {args.out_dir}")
+    t2 = time.time()
+    logging.info(f"Total time: {t2-t1:.2f}s")
 
     if args.denoise_cloud:
       logging.info("[Optional step] denoise point cloud...")
